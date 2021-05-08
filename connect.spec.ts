@@ -6,6 +6,8 @@ export enum Pawn {
 
 class Grid {
     private line: Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);
+    line1:  Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);;
+
 
     full() {
         return this.line.reduce((acc,pawn)=>acc && pawn!==Pawn.EMPTY,true);
@@ -15,9 +17,13 @@ class Grid {
         return this.line[column];
     }
 
-    addPawn(pawn: Pawn, column: number) {
-        this.line[column] = pawn;
-    }
+    addPawn(pawn: Pawn, column: number,line :number) {
+        if (line===0){
+            this.line[column] = pawn;}
+        else{
+            this.line1[column]=pawn
+
+    }}
 }
 
 describe('test connect 4', () => {
@@ -29,12 +35,15 @@ describe('test connect 4', () => {
         expect(grid.full()).toEqual(false);
     });
     it('should get  Red pawn at position column 0, line 0 ', () => {
-        grid.addPawn(Pawn.RED, 0);
+        grid.addPawn(Pawn.RED, 0,0);
         expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED);
     });
     it('should get Yellow at position column 0, line 0', () => {
-        grid.addPawn(Pawn.YELLOW, 0);
+        grid.addPawn(Pawn.YELLOW, 0,0);
         expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.YELLOW)
     });
-
+    it('should add a pawn on line 1',()=>{
+        grid.addPawn(Pawn.YELLOW, 0, 1);
+        expect(grid.line1[0]).toEqual(Pawn.YELLOW)
+    })
 });
