@@ -8,7 +8,7 @@ class Grid {
     private line: Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);
 
     full() {
-        return false;
+        return this.line.reduce((acc,pawn)=>acc && pawn!==Pawn.EMPTY,true);
     }
 
     getPawnAtPosition(column: number, line: number) {
