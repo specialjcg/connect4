@@ -36,4 +36,9 @@ describe('test connect 4', () => {
         grid.addPawn(Pawn.YELLOW, 0);
         expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.YELLOW)
     });
+    it('should not replace pawn in position', () => {
+        grid.addPawn(Pawn.YELLOW, 0)
+        grid.addPawn(Pawn.RED, 0)
+        expect(grid.getPawnAtPosition(0,0)).toEqual(Pawn.YELLOW)
+    });
 });
