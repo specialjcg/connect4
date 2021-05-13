@@ -50,11 +50,11 @@ describe('test connect 4', () => {
     });
     it('should get Red pawn at position column 0 ', () => {
         grid.addPawn(Pawn.RED, 0);
-        expect(grid.getPawnAtPosition(0,0)).toEqual(Pawn.RED);
+        expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED);
     });
     it('should get Yellow at position column 0', () => {
         grid.addPawn(Pawn.YELLOW, 0);
-        expect(grid.getPawnAtPosition(0,0)).toEqual(Pawn.YELLOW)
+        expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.YELLOW)
     });
     it('should get Red at position column 0 and yellow at position 7', () => {
         grid.addPawn(Pawn.RED, 0);
@@ -66,8 +66,8 @@ describe('test connect 4', () => {
         grid.addPawn(Pawn.RED, 1);
         grid.addPawn(Pawn.YELLOW, 1);
         grid.addPawn(Pawn.RED, 1);
-        expect(grid.getPawnAtPosition(1,0)).toEqual(Pawn.RED)
-        expect(grid.getPawnAtPosition(1,1)).toEqual(Pawn.YELLOW)
-        expect(grid.getPawnAtPosition(1,2)).toEqual(Pawn.RED)
+        expect(grid.getPawnAtPosition(1, 0)).toEqual(Pawn.RED)
+        expect(grid.getPawnAtPosition(1, 1)).toEqual(Pawn.YELLOW)
+        expect(grid.getPawnAtPosition(1, 2)).toEqual(Pawn.RED)
     });
 });
