@@ -4,10 +4,14 @@ export enum Pawn {
     EMPTY = 0
 }
 
+const COLUMNS:number=7;
+
+let ROWS:number=6;
+
 class Grid {
-    // private pawns: Pawn[] = Array.from({length:COLUMNS * ROWS}).map(()=>Pawn.EMPTY);
+    private pawns: Pawn[] = Array.from({length:COLUMNS * ROWS}).map(()=>Pawn.EMPTY);
     private line: Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);
-    line1:  Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);
+  //  line1:  Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);
 
 
     full() {
@@ -18,12 +22,11 @@ class Grid {
         return this.line[column];
     }
 
-    addPawn(pawn: Pawn, column: number,line :number) {
-        if (line===0){
-            this.line[column] = pawn;}
-        else{
-            this.line1[column]=pawn
-
+    addPawn(pawn: Pawn, column: number,row :number) {
+        if (row===0){
+            this.setPawnAtPosition(pawn, column, 0);
+        } else {
+            this.setPawnAtPosition(pawn, column, row);
     }}
 }
 
