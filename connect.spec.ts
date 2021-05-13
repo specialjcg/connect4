@@ -6,7 +6,7 @@ export enum Pawn {
 
 class Grid {
     private line: Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);
-    line1:  Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);;
+    line1:  Pawn[] = Array.from({length:7}).map(()=>Pawn.EMPTY);
 
 
     full() {
