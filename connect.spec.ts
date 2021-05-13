@@ -6,7 +6,7 @@ export enum Pawn {
 
 const COLUMNS: number = 7;
 
-let ROWS: number = 6;
+const ROWS: number = 6;
 
 class Grid {
     private pawns: Pawn[] = Array.from({length: COLUMNS * ROWS}).map(() => Pawn.EMPTY);
@@ -16,7 +16,11 @@ class Grid {
     }
 
     getPawnAtPosition(column: number, row: number): Pawn {
-        return this.pawns[column + row * COLUMNS];
+        return this.pawns[Grid.toOneDimension(column, row)];
+    }
+
+    private static toOneDimension(column: number, row: number) {
+        return column + row * COLUMNS;
     }
 
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
