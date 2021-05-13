@@ -23,7 +23,7 @@ class Grid {
         if (this.pawns[column] === Pawn.EMPTY) {
             this.pawns[column] = pawn;
         } else {
-            this.pawns[column + COLUMNS] = pawn;
+            this.setPawnAtPosition(pawn,column + COLUMNS);
         }
     }
 
@@ -53,5 +53,13 @@ describe('test connect 4', () => {
         grid.addPawn(Pawn.YELLOW, 0);
         expect(grid.getPawnAtPosition(0)).toEqual(Pawn.RED)
         expect(grid.getPawnAtPosition(7)).toEqual(Pawn.YELLOW)
+    });
+    it('should get Red at position column 1 and yellow at position 7+1 and red at  position 7+7+1', () => {
+        grid.addPawn(Pawn.RED, 1);
+        grid.addPawn(Pawn.YELLOW, 1);
+        grid.addPawn(Pawn.RED, 1);
+        expect(grid.getPawnAtPosition(1)).toEqual(Pawn.RED)
+        expect(grid.getPawnAtPosition(7+1)).toEqual(Pawn.YELLOW)
+        expect(grid.getPawnAtPosition(7+7+1)).toEqual(Pawn.RED)
     });
 });
