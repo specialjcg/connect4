@@ -70,4 +70,8 @@ describe('test connect 4', () => {
         expect(grid.getPawnAtPosition(1, 1)).toEqual(Pawn.YELLOW)
         expect(grid.getPawnAtPosition(1, 2)).toEqual(Pawn.RED)
     });
+
+    // TODO: fills the columns and manage edge cases
+    // TODO: Test victory conditions
+    // TODO: Core / Generic : prints (contrat d'interface ?).
 });
