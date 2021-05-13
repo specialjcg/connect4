@@ -22,12 +22,9 @@ class Grid {
         return this.line[column];
     }
 
-    addPawn(pawn: Pawn, column: number,row :number) {
-        if (row===0){
-            this.setPawnAtPosition(pawn, column, 0);
-        } else {
-            this.setPawnAtPosition(pawn, column, row);
-    }}
+    addPawn(pawn: Pawn, column: number,row :number): void {
+        this.setPawnAtPosition(pawn, column, row);
+    }
 }
 
 describe('test connect 4', () => {
