@@ -15,20 +15,24 @@ class Grid {
         return this.pawns.reduce((acc, pawn) => acc && pawn !== Pawn.EMPTY, true);
     }
 
-    getPawnAtPosition(column: number): Pawn {
-        return this.pawns[column];
+    getPawnAtPosition(column: number, row: number): Pawn {
+        return this.pawns[column + row * COLUMNS];
     }
 
-    setPawnAtPosition(pawn: Pawn, column: number): void {
-        if (this.pawns[column] === Pawn.EMPTY) {
-            this.pawns[column] = pawn;
+    private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
+        if (this.pawns[index] === Pawn.EMPTY) {
+            this.pawns[index] = pawn;
         } else {
-            this.setPawnAtPosition(pawn,column + COLUMNS);
+            this.insertPawnInPawnsCollection(pawn, Grid.nextLine(index));
         }
     }
 
+    private static nextLine(index: number) {
+        return index + COLUMNS;
+    }
+
     addPawn(pawn: Pawn, column: number): void {
-        this.setPawnAtPosition(pawn, column);
+        this.insertPawnInPawnsCollection(pawn, column)
     }
 }
 
@@ -51,8 +55,8 @@ describe('test connect 4', () => {
     it('should get Red at position column 0 and yellow at position 7', () => {
         grid.addPawn(Pawn.RED, 0);
         grid.addPawn(Pawn.YELLOW, 0);
-        expect(grid.getPawnAtPosition(0)).toEqual(Pawn.RED)
-        expect(grid.getPawnAtPosition(7)).toEqual(Pawn.YELLOW)
+        expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED)
+        expect(grid.getPawnAtPosition(0, 1)).toEqual(Pawn.YELLOW)
     });
     it('should add pawn Red,Yellow,Red: 1 at position column 1', () => {
         grid.addPawn(Pawn.RED, 1);
