@@ -9,7 +9,7 @@ const COLUMNS: number = 7;
 const ROWS: number = 6;
 
 class Grid {
-    private pawns: Pawn[] = Array.from({length: COLUMNS * ROWS}).map(() => Pawn.EMPTY);
+    private pawns: Pawn[] = Array.from({length: DIMENSION}).map(() => Pawn.EMPTY);
 
     private static toOneDimension(column: number, row: number) {
         return column + row * COLUMNS;
