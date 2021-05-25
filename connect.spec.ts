@@ -11,6 +11,18 @@ const ROWS: number = 6;
 class Grid {
     private pawns: Pawn[] = Array.from({length: COLUMNS * ROWS}).map(() => Pawn.EMPTY);
 
+    private static toOneDimension(column: number, row: number) {
+        return column + row * COLUMNS;
+    }
+
+    private static nextLine(index: number) {
+        if (index + COLUMNS >= ROWS * COLUMNS) {
+            throw new RangeError();
+        }
+
+        return index + COLUMNS;
+    }
+
     full() {
         return this.pawns.reduce((acc, pawn) => acc && pawn !== Pawn.EMPTY, true);
     }
@@ -19,8 +31,8 @@ class Grid {
         return this.pawns[Grid.toOneDimension(column, row)];
     }
 
-    private static toOneDimension(column: number, row: number) {
-        return column + row * COLUMNS;
+    addPawn(pawn: Pawn, column: number): void {
+        this.insertPawnInPawnsCollection(pawn, column)
     }
 
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
@@ -29,14 +41,6 @@ class Grid {
         } else {
             this.insertPawnInPawnsCollection(pawn, Grid.nextLine(index));
         }
-    }
-
-    private static nextLine(index: number) {
-        return index + COLUMNS;
-    }
-
-    addPawn(pawn: Pawn, column: number): void {
-        this.insertPawnInPawnsCollection(pawn, column)
     }
 }
 
@@ -70,7 +74,20 @@ describe('test connect 4', () => {
         expect(grid.getPawnAtPosition(1, 1)).toEqual(Pawn.YELLOW)
         expect(grid.getPawnAtPosition(1, 2)).toEqual(Pawn.RED)
     });
+    it('should not add pawn when column 0 full', () => {
+        try {
+            grid.addPawn(Pawn.RED, 0);
+            grid.addPawn(Pawn.YELLOW, 0);
+            grid.addPawn(Pawn.RED, 0);
+            grid.addPawn(Pawn.RED, 0);
+            grid.addPawn(Pawn.YELLOW, 0);
+            grid.addPawn(Pawn.RED, 0);
+            grid.addPawn(Pawn.RED, 0);
+        } catch (e) {
+            expect(e).toBeInstanceOf(RangeError);
+        }
 
+    });
     // TODO: fills the columns and manage edge cases
     // TODO: Test victory conditions
     // TODO: Core / Generic : prints (contrat d'interface ?).
