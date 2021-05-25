@@ -76,13 +76,13 @@ describe('test connect 4', () => {
     });
     it('should not add pawn when column 0 full', () => {
         try {
-            grid.addPawn(Pawn.RED, 0);
-            grid.addPawn(Pawn.YELLOW, 0);
-            grid.addPawn(Pawn.RED, 0);
-            grid.addPawn(Pawn.RED, 0);
-            grid.addPawn(Pawn.YELLOW, 0);
-            grid.addPawn(Pawn.RED, 0);
-            grid.addPawn(Pawn.RED, 0);
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.RED, new Column(0));
         } catch (e) {
             expect(e).toBeInstanceOf(RangeError);
         }
