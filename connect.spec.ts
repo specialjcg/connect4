@@ -61,6 +61,12 @@ class Grid {
         return Endgame.NOT_WIN;
     }
 
+    private isRedColumnWin() {
+        return [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21]].toString() === FOUR_REDS ||
+            [this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28]].toString() === FOUR_REDS ||
+            [this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]].toString() === FOUR_REDS;
+    }
+
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
         const NEXT_LINE_INDEX: number = Grid.nextLineIndex(index);
 
