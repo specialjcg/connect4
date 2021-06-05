@@ -50,7 +50,11 @@ class Grid {
     }
 
     private endGameState() {
-        if ([this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21]].toString().includes([Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString())) {
+        if (
+            [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21]].toString() === [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString() ||
+            [this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28]].toString() === [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString() ||
+            [this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]].toString() === [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString()
+        ) {
             return Endgame.RED_WIN;
         }
 
@@ -133,6 +137,16 @@ describe('test connect 4', () => {
         const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
 
         expect(endgame).toEqual(Endgame.NOT_WIN);
+    });
+    it('should be win when column 0 state move from [Y R R R] to [Y R R R +R]', () => {
+        grid.addPawn(Pawn.YELLOW, new Column(0));
+        grid.addPawn(Pawn.RED, new Column(0));
+        grid.addPawn(Pawn.RED, new Column(0));
+        grid.addPawn(Pawn.RED, new Column(0));
+
+        const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+
+        expect(endgame).toEqual(Endgame.RED_WIN);
     });
     // TODO: Test endgame conditions
     // TODO: Core / Generic : prints (contrat d'interface ?).
