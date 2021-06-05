@@ -15,6 +15,8 @@ const ROWS: number = 6;
 
 const BOARD_DIMENSION: number = COLUMNS * ROWS;
 
+const FOUR_REDS: string = [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString();
+
 class Column {
     constructor(public readonly index: number) {
         if (index < 0 || index > 6) {
