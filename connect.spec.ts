@@ -5,6 +5,7 @@ export enum Pawn {
 }
 
 export enum Endgame {
+    NOT_WIN,
     RED_WIN
 }
 
@@ -46,7 +47,7 @@ class Grid {
     addPawn(pawn: Pawn, column: Column): Endgame {
         this.insertPawnInPawnsCollection(pawn, column.index);
 
-        return Endgame.RED_WIN;
+        return Endgame.NOT_WIN;
     }
 
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
@@ -117,6 +118,14 @@ describe('test connect 4', () => {
         const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
 
         expect(endgame).toEqual(Endgame.RED_WIN);
+    });
+    it('should be not win when we add a red pawn in column 0 and the 2 pawn under it are red', () => {
+        grid.addPawn(Pawn.RED, new Column(0));
+        grid.addPawn(Pawn.RED, new Column(0));
+
+        const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+
+        expect(endgame).toEqual(Endgame.NOT_WIN);
     });
     // TODO: Test endgame conditions
     // TODO: Core / Generic : prints (contrat d'interface ?).
