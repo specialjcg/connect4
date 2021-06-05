@@ -39,8 +39,8 @@ class Grid {
         return this.pawns[Grid.toOneDimension(column, row)];
     }
 
-    addPawn(pawn: Pawn, column: number): void {
-        this.insertPawnInPawnsCollection(pawn, column)
+    addPawn(pawn: Pawn, column: Column): void {
+        this.insertPawnInPawnsCollection(pawn, column.index);
     }
 
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
@@ -65,16 +65,16 @@ describe('test connect 4', () => {
         expect(grid.full()).toEqual(false);
     });
     it('should get Red pawn at position column 0 ', () => {
-        grid.addPawn(Pawn.RED, 0);
+        grid.addPawn(Pawn.RED, new Column(0));
         expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED);
     });
     it('should get Yellow at position column 0', () => {
-        grid.addPawn(Pawn.YELLOW, 0);
+        grid.addPawn(Pawn.YELLOW, new Column(0));
         expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.YELLOW)
     });
     it('should get Red at position column 0 and yellow at position 7', () => {
-        grid.addPawn(Pawn.RED, 0);
-        grid.addPawn(Pawn.YELLOW, 0);
+        grid.addPawn(Pawn.RED, new Column(0));
+        grid.addPawn(Pawn.YELLOW, new Column(0));
         expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED)
         expect(grid.getPawnAtPosition(0, 1)).toEqual(Pawn.YELLOW)
     });
@@ -87,7 +87,7 @@ describe('test connect 4', () => {
         expect(grid.getPawnAtPosition(1, 2)).toEqual(Pawn.RED)
     });
     it('should not add pawn when column 0 full', () => {
-        try {
+        expect(() => {
             grid.addPawn(Pawn.RED, new Column(0));
             grid.addPawn(Pawn.YELLOW, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
@@ -95,10 +95,7 @@ describe('test connect 4', () => {
             grid.addPawn(Pawn.YELLOW, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
-        } catch (e) {
-            expect(e).toBeInstanceOf(RangeError);
-        }
-
+        }).toThrow(RangeError);
     });
     it('should not add pawn in column 7 ', () => {
         expect(() => grid.addPawn(Pawn.RED, new Column(7))).toThrow(IllegalColumnIndexError);
