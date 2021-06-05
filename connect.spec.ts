@@ -46,7 +46,7 @@ class Grid {
 
     addPawn(pawn: Pawn, column: Column): Endgame {
         this.insertPawnInPawnsCollection(pawn, column.index);
-       if ([this.pawns[0],this.pawns[7],this.pawns[14],this.pawns[21]].toString().includes([Pawn.RED,Pawn.RED,Pawn.RED,Pawn.RED].toString()){
+       if ([this.pawns[0],this.pawns[7],this.pawns[14],this.pawns[21]].toString().includes([Pawn.RED,Pawn.RED,Pawn.RED,Pawn.RED].toString())){
             return Endgame.RED_WIN;
         }
 
