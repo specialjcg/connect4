@@ -50,11 +50,7 @@ class Grid {
     }
 
     private endGameState() {
-        if (
-            [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21]].toString() === [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString() ||
-            [this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28]].toString() === [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString() ||
-            [this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]].toString() === [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString()
-        ) {
+        if (this.isRedColumnWin()) {
             return Endgame.RED_WIN;
         }
 
