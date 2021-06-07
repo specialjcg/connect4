@@ -16,6 +16,8 @@ const ROWS: number = 6;
 const BOARD_DIMENSION: number = COLUMNS * ROWS;
 
 const FOUR_REDS: string = [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString();
+const isFour = (columnZero:number[], startLine:number):boolean => columnZero.slice(startLine, 4 + startLine).reduce((acc, val) => acc + val, 0) === 4;
+
 
 class Column {
     constructor(public readonly index: number) {
@@ -58,12 +60,18 @@ class Grid {
 
         return Endgame.NOT_WIN;
     }
-
     private isRedColumnWin() {
-        return [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21]].toString() === FOUR_REDS ||
-            [this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28]].toString() === FOUR_REDS ||
-            [this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]].toString() === FOUR_REDS;
-    }
+        const columnZero=[this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21],this.pawns[28], this.pawns[35]]
+        return isFour(columnZero, 0)
+            || isFour(columnZero, 1)
+            || isFour(columnZero, 2);
+
+    };
+    // private isRedColumnWin() {
+    //     return [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21]].toString() === FOUR_REDS ||
+    //         [this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28]].toString() === FOUR_REDS ||
+    //         [this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]].toString() === FOUR_REDS;
+    // }
 
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
         const NEXT_LINE_INDEX: number = Grid.nextLineIndex(index);
