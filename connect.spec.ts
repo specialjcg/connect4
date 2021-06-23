@@ -53,7 +53,7 @@ class IllegalColumnIndexError {
 class Grid {
     private pawns: Pawn[] = Array.from({length: BOARD_DIMENSION}).map(() => Pawn.EMPTY);
 
-    private static toOneDimension(column: number, row: number) {
+    private static toOneDimension(column: number, row: number): number {
         return column + row * COLUMNS;
     }
 
@@ -81,9 +81,9 @@ class Grid {
     private isColumnWin(playedColumn: Column): Endgame {
         const column: Pawn[] = this.getColumn(playedColumn)
         return [
-            isFour(columnZero, 0),
-            isFour(columnZero, 1),
-            isFour(columnZero, 2)
+            isFour(column, 0),
+            isFour(column, 1),
+            isFour(column, 2)
         ].find((endgame: Endgame) => endgame !== Endgame.NOT_WIN) 
         || Endgame.NOT_WIN;
     };
