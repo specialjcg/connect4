@@ -6,7 +6,8 @@ export enum Pawn {
 
 export enum Endgame {
     NOT_WIN,
-    RED_WIN
+    RED_WIN,
+    YELLOW_WIN,
 }
 
 const COLUMNS: number = 7;
@@ -17,13 +18,24 @@ const BOARD_DIMENSION: number = COLUMNS * ROWS;
 
 const FOUR_PAWNS_TO_WIN = 4;
 
+const FOUR_RED_PAWNS = 4;
+
+const FOUR_YELLOW_PAWNS = -4;
+
 function endLineToWin(startLine: number) {
     return FOUR_PAWNS_TO_WIN + startLine;
 }
 
-const isFourRed = (columnZero:number[], startLine:number):boolean => columnZero
-    .slice(startLine, endLineToWin(startLine))
-    .reduce((totalPawns, currentPawn) => totalPawns + currentPawn, 0) === FOUR_PAWNS_TO_WIN;
+const isFour = (columnZero: number[], startLine: number): Endgame => {
+    const val = columnZero
+        .slice(startLine, endLineToWin(startLine))
+        .reduce((totalPawns, currentPawn) => totalPawns + currentPawn, 0);
+
+    if (val === FOUR_RED_PAWNS) return Endgame.RED_WIN;
+    if (val === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
+
+    return Endgame.NOT_WIN;
+}
 
 class Column {
     constructor(public readonly index: number) {
@@ -33,7 +45,8 @@ class Column {
     }
 }
 
-class IllegalColumnIndexError {}
+class IllegalColumnIndexError {
+}
 
 class Grid {
     private pawns: Pawn[] = Array.from({length: BOARD_DIMENSION}).map(() => Pawn.EMPTY);
@@ -59,18 +72,18 @@ class Grid {
         return this.endGameState();
     }
 
-    private endGameState() {
-        if (this.isRedColumnWin()) {
-            return Endgame.RED_WIN;
-        }
-
-        return Endgame.NOT_WIN;
+    private endGameState(): Endgame {
+        return this.isColumnWin();
     }
-    private isRedColumnWin() {
-        const columnZero=[this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21],this.pawns[28], this.pawns[35]]
-        return isFourRed(columnZero, 0)
-            || isFourRed(columnZero, 1)
-            || isFourRed(columnZero, 2);
+
+    private isColumnWin(): Endgame {
+        const columnZero = [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]]
+        return [
+            isFour(columnZero, 0),
+            isFour(columnZero, 1),
+            isFour(columnZero, 2)
+        ].find((endgame: Endgame) => endgame !== Endgame.NOT_WIN) 
+        || Endgame.NOT_WIN;
     };
 
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
@@ -160,6 +173,18 @@ describe('test connect 4', () => {
 
         expect(endgame).toEqual(Endgame.RED_WIN);
     });
+    it('should be win when column 0 state move from [R Y Y Y] to [R Y Y Y +Y]', () => {
+        grid.addPawn(Pawn.RED, new Column(0));
+        grid.addPawn(Pawn.YELLOW, new Column(0));
+        grid.addPawn(Pawn.YELLOW, new Column(0));
+        grid.addPawn(Pawn.YELLOW, new Column(0));
+
+        const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(0));
+
+        expect(endgame).toEqual(Endgame.YELLOW_WIN);
+    });
+
+
     // TODO: Test endgame conditions
     // TODO: Core / Generic : prints (contrat d'interface ?).
     // TODO: Game loop
