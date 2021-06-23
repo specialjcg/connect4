@@ -15,9 +15,15 @@ const ROWS: number = 6;
 
 const BOARD_DIMENSION: number = COLUMNS * ROWS;
 
-const FOUR_REDS: string = [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString();
-const isFour = (columnZero:number[], startLine:number):boolean => columnZero.slice(startLine, 4 + startLine).reduce((acc, val) => acc + val, 0) === 4;
+const FOUR_PAWNS_TO_WIN = 4;
 
+function endLineToWin(startLine: number) {
+    return FOUR_PAWNS_TO_WIN + startLine;
+}
+
+const isFourRed = (columnZero:number[], startLine:number):boolean => columnZero
+    .slice(startLine, endLineToWin(startLine))
+    .reduce((totalPawns, currentPawn) => totalPawns + currentPawn, 0) === FOUR_PAWNS_TO_WIN;
 
 class Column {
     constructor(public readonly index: number) {
