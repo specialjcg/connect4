@@ -22,6 +22,8 @@ const FOUR_RED_PAWNS = 4;
 
 const FOUR_YELLOW_PAWNS = -4;
 
+const EMPTY_COLUMN = [0, 0, 0, 0, 0, 0];
+
 function endLineToWin(startLine: number) {
     return FOUR_PAWNS_TO_WIN + startLine;
 }
@@ -69,15 +71,15 @@ class Grid {
 
     addPawn(pawn: Pawn, column: Column): Endgame {
         this.insertPawnInPawnsCollection(pawn, column.index);
-        return this.endGameState();
+        return this.endGameState(column);
     }
 
-    private endGameState(): Endgame {
-        return this.isColumnWin();
+    private endGameState(column: Column): Endgame {
+        return this.isColumnWin(column);
     }
 
-    private isColumnWin(): Endgame {
-        const columnZero = [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]]
+    private isColumnWin(playedColumn: Column): Endgame {
+        const column: Pawn[] = this.getColumn(playedColumn)
         return [
             isFour(columnZero, 0),
             isFour(columnZero, 1),
