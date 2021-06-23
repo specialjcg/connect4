@@ -86,6 +86,10 @@ class Grid {
         || Endgame.NOT_WIN;
     };
 
+    private getColumn(playedColumn: Column): Pawn[] {
+        return EMPTY_COLUMN.map((_, index: number) => this.pawns[index * COLUMNS + playedColumn.index]);
+    }
+
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
         const NEXT_LINE_INDEX: number = Grid.nextLineIndex(index);
 
@@ -173,13 +177,13 @@ describe('test connect 4', () => {
 
         expect(endgame).toEqual(Endgame.RED_WIN);
     });
-    it('should be win when column 0 state move from [R Y Y Y] to [R Y Y Y +Y]', () => {
-        grid.addPawn(Pawn.RED, new Column(0));
-        grid.addPawn(Pawn.YELLOW, new Column(0));
-        grid.addPawn(Pawn.YELLOW, new Column(0));
-        grid.addPawn(Pawn.YELLOW, new Column(0));
+    it('should be win when column 6 state move from [R Y Y Y] to [R Y Y Y +Y]', () => {
+        grid.addPawn(Pawn.RED, new Column(6));
+        grid.addPawn(Pawn.YELLOW, new Column(6));
+        grid.addPawn(Pawn.YELLOW, new Column(6));
+        grid.addPawn(Pawn.YELLOW, new Column(6));
 
-        const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(0));
+        const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(6));
 
         expect(endgame).toEqual(Endgame.YELLOW_WIN);
     });
