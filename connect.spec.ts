@@ -62,16 +62,10 @@ class Grid {
     }
     private isRedColumnWin() {
         const columnZero=[this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21],this.pawns[28], this.pawns[35]]
-        return isFour(columnZero, 0)
-            || isFour(columnZero, 1)
-            || isFour(columnZero, 2);
-
+        return isFourRed(columnZero, 0)
+            || isFourRed(columnZero, 1)
+            || isFourRed(columnZero, 2);
     };
-    // private isRedColumnWin() {
-    //     return [this.pawns[0], this.pawns[7], this.pawns[14], this.pawns[21]].toString() === FOUR_REDS ||
-    //         [this.pawns[7], this.pawns[14], this.pawns[21], this.pawns[28]].toString() === FOUR_REDS ||
-    //         [this.pawns[14], this.pawns[21], this.pawns[28], this.pawns[35]].toString() === FOUR_REDS;
-    // }
 
     private insertPawnInPawnsCollection(pawn: Pawn, index: number): void {
         const NEXT_LINE_INDEX: number = Grid.nextLineIndex(index);
