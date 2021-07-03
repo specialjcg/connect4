@@ -86,16 +86,23 @@ class Grid {
     private isColumnWin(playedColumn: Column): Endgame {
         const column: Pawn[] = this.getColumn(playedColumn)
         return [
-                isFour(column, 0),
-                isFour(column, 1),
-                isFour(column, 2)
+                isFourColumn(column, 0),
+                isFourColumn(column, 1),
+                isFourColumn(column, 2)
             ].find((endgame: Endgame) => endgame !== Endgame.NOT_WIN)
             || Endgame.NOT_WIN;
     };
 
     private isLineWin(playedColumn: Column): Endgame {
-        return playedColumn.index === 3 ? Endgame.YELLOW_WIN : Endgame.NOT_WIN;
+        if (this.isFourLine()) {
+            return Endgame.YELLOW_WIN;
+        }
+        return Endgame.NOT_WIN;
     };
+
+    private isFourLine() {
+        return this.pawns.slice(0, 4).reduce((acc, val) => acc + val, 0) === -4;
+    }
 
     private getColumn(playedColumn: Column): Pawn[] {
         return EMPTY_COLUMN.map((_, index: number) => this.pawns[index * COLUMNS + playedColumn.index]);
