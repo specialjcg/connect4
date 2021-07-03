@@ -28,8 +28,8 @@ function endLineToWin(startLine: number) {
     return FOUR_PAWNS_TO_WIN + startLine;
 }
 
-const isFour = (columnZero: number[], startLine: number): Endgame => {
-    const val = columnZero
+const isFourColumn = (column: number[], startLine: number): Endgame => {
+    const val = column
         .slice(startLine, endLineToWin(startLine))
         .reduce((totalPawns, currentPawn) => totalPawns + currentPawn, 0);
 
@@ -219,6 +219,15 @@ describe('test connect 4', () => {
             const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(3));
 
             expect(endgame).toEqual(Endgame.YELLOW_WIN);
+        });
+        it('should be not win when line 0 state move from L[Y Y Y] to L[Y Y Y +R]', () => {
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(1));
+            grid.addPawn(Pawn.YELLOW, new Column(2));
+
+            const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(3));
+
+            expect(endgame).toEqual(Endgame.NOT_WIN);
         });
     });
 
