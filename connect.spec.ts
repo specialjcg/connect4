@@ -249,6 +249,32 @@ describe('test connect 4', () => {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             expect(endgame).toEqual(Endgame.YELLOW_WIN);
         });
+
+        it(`should be yellow win when add a Yellow pawn in line 1
+        board state from : 
+        ...
+        | Y Y Y . . . . |
+        | Y Y Y R . . . |
+        to
+        ...
+        | Y Y Y Y . . . |
+        | Y Y Y R . . . |`, () => {
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(1));
+            grid.addPawn(Pawn.YELLOW, new Column(2));
+            grid.addPawn(Pawn.RED, new Column(3));
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(1));
+            grid.addPawn(Pawn.YELLOW, new Column(2));
+
+            const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(3));
+
+            expect(grid.printGrid()).toEqual([-1, -1, -1, 1, 0, 0, 0,
+                -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            expect(endgame).toEqual(Endgame.YELLOW_WIN);
+        })
+
+
     });
 
     // TODO: Test endgame conditions
