@@ -75,7 +75,12 @@ class Grid {
     }
 
     private endGameState(column: Column): Endgame {
-        return this.isColumnWin(column);
+        let endgameState: Endgame = this.isColumnWin(column);
+        if (endgameState !== Endgame.NOT_WIN) {
+            return endgameState;
+        }
+
+        return this.isLineWin(column);
     }
 
     private isColumnWin(playedColumn: Column): Endgame {
@@ -86,6 +91,10 @@ class Grid {
                 isFour(column, 2)
             ].find((endgame: Endgame) => endgame !== Endgame.NOT_WIN)
             || Endgame.NOT_WIN;
+    };
+
+    private isLineWin(playedColumn: Column): Endgame {
+        return playedColumn.index === 3 ? Endgame.YELLOW_WIN : Endgame.NOT_WIN;
     };
 
     private getColumn(playedColumn: Column): Pawn[] {
@@ -173,7 +182,7 @@ describe('test connect 4', () => {
 
             expect(endgame).toEqual(Endgame.NOT_WIN);
         });
-        it('should be win when column 0 state move from [Y R R R] to [Y R R R +R]', () => {
+        it('should be win when column 0 state move from C[Y R R R] to C[Y R R R +R]', () => {
             grid.addPawn(Pawn.YELLOW, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
