@@ -183,7 +183,7 @@ describe('test connect 4', () => {
 
             expect(endgame).toEqual(Endgame.RED_WIN);
         });
-        it('should be win when column 6 state move from [R Y Y Y] to [R Y Y Y +Y]', () => {
+        it('should be win when column 6 state move from C[R Y Y Y] to C[R Y Y Y +Y]', () => {
             grid.addPawn(Pawn.RED, new Column(6));
             grid.addPawn(Pawn.YELLOW, new Column(6));
             grid.addPawn(Pawn.YELLOW, new Column(6));
