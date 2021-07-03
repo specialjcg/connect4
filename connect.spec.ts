@@ -81,11 +81,11 @@ class Grid {
     private isColumnWin(playedColumn: Column): Endgame {
         const column: Pawn[] = this.getColumn(playedColumn)
         return [
-            isFour(column, 0),
-            isFour(column, 1),
-            isFour(column, 2)
-        ].find((endgame: Endgame) => endgame !== Endgame.NOT_WIN) 
-        || Endgame.NOT_WIN;
+                isFour(column, 0),
+                isFour(column, 1),
+                isFour(column, 2)
+            ].find((endgame: Endgame) => endgame !== Endgame.NOT_WIN)
+            || Endgame.NOT_WIN;
     };
 
     private getColumn(playedColumn: Column): Pawn[] {
@@ -110,84 +110,89 @@ describe('test connect 4', () => {
     beforeEach(() => {
         grid = new Grid();
     });
-    it('should have an empty grid', () => {
-        expect(grid.full()).toEqual(false);
-    });
-    it('should get Red pawn at position column 0 ', () => {
-        grid.addPawn(Pawn.RED, new Column(0));
-        expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED);
-    });
-    it('should get Yellow at position column 0', () => {
-        grid.addPawn(Pawn.YELLOW, new Column(0));
-        expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.YELLOW)
-    });
-    it('should get Red at position column 0 and yellow at position 7', () => {
-        grid.addPawn(Pawn.RED, new Column(0));
-        grid.addPawn(Pawn.YELLOW, new Column(0));
-        expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED)
-        expect(grid.getPawnAtPosition(0, 1)).toEqual(Pawn.YELLOW)
-    });
-    it('should add pawn Red,Yellow,Red: 1 at position column 1', () => {
-        grid.addPawn(Pawn.RED, new Column(1));
-        grid.addPawn(Pawn.YELLOW, new Column(1));
-        grid.addPawn(Pawn.RED, new Column(1));
-        expect(grid.getPawnAtPosition(1, 0)).toEqual(Pawn.RED)
-        expect(grid.getPawnAtPosition(1, 1)).toEqual(Pawn.YELLOW)
-        expect(grid.getPawnAtPosition(1, 2)).toEqual(Pawn.RED)
-    });
-    it('should not add pawn when column 0 full', () => {
-        expect(() => {
+    describe('basics rules', () => {
+        it('should have an empty grid', () => {
+            expect(grid.full()).toEqual(false);
+        });
+        it('should get Red pawn at position column 0 ', () => {
             grid.addPawn(Pawn.RED, new Column(0));
+            expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED);
+        });
+        it('should get Yellow at position column 0', () => {
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.YELLOW)
+        });
+        it('should get Red at position column 0 and yellow at position 7', () => {
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            expect(grid.getPawnAtPosition(0, 0)).toEqual(Pawn.RED)
+            expect(grid.getPawnAtPosition(0, 1)).toEqual(Pawn.YELLOW)
+        });
+        it('should add pawn Red,Yellow,Red: 1 at position column 1', () => {
+            grid.addPawn(Pawn.RED, new Column(1));
+            grid.addPawn(Pawn.YELLOW, new Column(1));
+            grid.addPawn(Pawn.RED, new Column(1));
+            expect(grid.getPawnAtPosition(1, 0)).toEqual(Pawn.RED)
+            expect(grid.getPawnAtPosition(1, 1)).toEqual(Pawn.YELLOW)
+            expect(grid.getPawnAtPosition(1, 2)).toEqual(Pawn.RED)
+        });
+        it('should not add pawn when column 0 full', () => {
+            expect(() => {
+                grid.addPawn(Pawn.RED, new Column(0));
+                grid.addPawn(Pawn.YELLOW, new Column(0));
+                grid.addPawn(Pawn.RED, new Column(0));
+                grid.addPawn(Pawn.RED, new Column(0));
+                grid.addPawn(Pawn.YELLOW, new Column(0));
+                grid.addPawn(Pawn.RED, new Column(0));
+                grid.addPawn(Pawn.RED, new Column(0));
+            }).toThrow(RangeError);
+        });
+        it('should not add pawn in column 7 ', () => {
+            expect(() => grid.addPawn(Pawn.RED, new Column(7))).toThrow(IllegalColumnIndexError);
+        });
+        it('should not add pawn in column -1 ', () => {
+            expect(() => grid.addPawn(Pawn.RED, new Column(-1))).toThrow(IllegalColumnIndexError);
+        });
+    });
+
+    describe('For Column Win', () => {
+        it('should be win when we add a red pawn in column 0 and the 3 pawn under it are red', () => {
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.RED, new Column(0));
+
+            const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+
+            expect(endgame).toEqual(Endgame.RED_WIN);
+        });
+        it('should be not win when we add a red pawn in column 0 and the 2 pawn under it are red', () => {
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.RED, new Column(0));
+
+            const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+
+            expect(endgame).toEqual(Endgame.NOT_WIN);
+        });
+        it('should be win when column 0 state move from [Y R R R] to [Y R R R +R]', () => {
             grid.addPawn(Pawn.YELLOW, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
-            grid.addPawn(Pawn.YELLOW, new Column(0));
             grid.addPawn(Pawn.RED, new Column(0));
-            grid.addPawn(Pawn.RED, new Column(0));
-        }).toThrow(RangeError);
-    });
-    it('should not add pawn in column 7 ', () => {
-        expect(() => grid.addPawn(Pawn.RED, new Column(7))).toThrow(IllegalColumnIndexError);
-    });
-    it('should not add pawn in column -1 ', () => {
-        expect(() => grid.addPawn(Pawn.RED, new Column(-1))).toThrow(IllegalColumnIndexError);
-    });
-    it('should be win when we add a red pawn in column 0 and the 3 pawn under it are red', () => {
-        grid.addPawn(Pawn.RED, new Column(0));
-        grid.addPawn(Pawn.RED, new Column(0));
-        grid.addPawn(Pawn.RED, new Column(0));
 
-        const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+            const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
 
-        expect(endgame).toEqual(Endgame.RED_WIN);
-    });
-    it('should be not win when we add a red pawn in column 0 and the 2 pawn under it are red', () => {
-        grid.addPawn(Pawn.RED, new Column(0));
-        grid.addPawn(Pawn.RED, new Column(0));
+            expect(endgame).toEqual(Endgame.RED_WIN);
+        });
+        it('should be win when column 6 state move from [R Y Y Y] to [R Y Y Y +Y]', () => {
+            grid.addPawn(Pawn.RED, new Column(6));
+            grid.addPawn(Pawn.YELLOW, new Column(6));
+            grid.addPawn(Pawn.YELLOW, new Column(6));
+            grid.addPawn(Pawn.YELLOW, new Column(6));
 
-        const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+            const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(6));
 
-        expect(endgame).toEqual(Endgame.NOT_WIN);
-    });
-    it('should be win when column 0 state move from [Y R R R] to [Y R R R +R]', () => {
-        grid.addPawn(Pawn.YELLOW, new Column(0));
-        grid.addPawn(Pawn.RED, new Column(0));
-        grid.addPawn(Pawn.RED, new Column(0));
-        grid.addPawn(Pawn.RED, new Column(0));
-
-        const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
-
-        expect(endgame).toEqual(Endgame.RED_WIN);
-    });
-    it('should be win when column 6 state move from [R Y Y Y] to [R Y Y Y +Y]', () => {
-        grid.addPawn(Pawn.RED, new Column(6));
-        grid.addPawn(Pawn.YELLOW, new Column(6));
-        grid.addPawn(Pawn.YELLOW, new Column(6));
-        grid.addPawn(Pawn.YELLOW, new Column(6));
-
-        const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(6));
-
-        expect(endgame).toEqual(Endgame.YELLOW_WIN);
+            expect(endgame).toEqual(Endgame.YELLOW_WIN);
+        });
     });
 
 
