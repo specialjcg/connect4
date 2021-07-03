@@ -194,7 +194,17 @@ describe('test connect 4', () => {
             expect(endgame).toEqual(Endgame.YELLOW_WIN);
         });
     });
+    describe('For Line Win', () => {
+        it('should be win when line 0 state move from L[Y Y Y] to L[Y Y Y +Y]', () => {
+            grid.addPawn(Pawn.YELLOW, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(1));
+            grid.addPawn(Pawn.YELLOW, new Column(2));
 
+            const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(3));
+
+            expect(endgame).toEqual(Endgame.YELLOW_WIN);
+        });
+    });
 
     // TODO: Test endgame conditions
     // TODO: Core / Generic : prints (contrat d'interface ?).
