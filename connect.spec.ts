@@ -24,20 +24,7 @@ const FOUR_YELLOW_PAWNS = -4;
 
 const EMPTY_COLUMN = [0, 0, 0, 0, 0, 0];
 
-function endLineToWin(startLine: number) {
-    return FOUR_PAWNS_TO_WIN + startLine;
-}
-
-const isFourColumn = (column: number[], startLine: number): Endgame => {
-    const val = column
-        .slice(startLine, endLineToWin(startLine))
-        .reduce((totalPawns, currentPawn) => totalPawns + currentPawn, 0);
-
-    if (val === FOUR_RED_PAWNS) return Endgame.RED_WIN;
-    if (val === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
-
-    return Endgame.NOT_WIN;
-}
+const endLineToWin = (startLine: number) => FOUR_PAWNS_TO_WIN + startLine;
 
 class Column {
     constructor(public readonly index: number) {
@@ -108,6 +95,24 @@ class Grid {
         }
         return Endgame.NOT_WIN;
     };
+
+    private getLineIndex(playedColumn: Column) {
+        const column: Pawn[] = this.getColumn(playedColumn);
+        let firstEmptyIndex = column.indexOf(Pawn.EMPTY);
+        if (firstEmptyIndex === NOT_IN_ARRAY) firstEmptyIndex = COLUMNS;
+        return (firstEmptyIndex - 1) * COLUMNS;
+    }
+
+    private isFourColumn(column: number[], startLine: number): Endgame {
+        const val = column
+            .slice(startLine, endLineToWin(startLine))
+            .reduce((totalPawns, currentPawn) => totalPawns + currentPawn, 0);
+
+        if (val === FOUR_RED_PAWNS) return Endgame.RED_WIN;
+        if (val === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
+
+        return Endgame.NOT_WIN;
+    }
 
     private isFourLine(lineIndex: number): boolean {
         return this.pawns.slice(lineIndex, 4 + lineIndex).reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS
