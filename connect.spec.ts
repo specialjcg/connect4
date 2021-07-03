@@ -74,6 +74,10 @@ class Grid {
         return this.endGameState(column);
     }
 
+    printGrid() {
+        return this.pawns;
+    }
+
     private endGameState(column: Column): Endgame {
         let endgameState: Endgame = this.isColumnWin(column);
         if (endgameState !== Endgame.NOT_WIN) {
@@ -100,8 +104,11 @@ class Grid {
         return Endgame.NOT_WIN;
     };
 
-    private isFourLine() {
-        return this.pawns.slice(0, 4).reduce((acc, val) => acc + val, 0) === -4;
+    private isFourLine(): boolean {
+        return this.pawns.slice(0, 4).reduce((acc, val) => acc + val, 0) === -4
+            || this.pawns.slice(1, 5).reduce((acc, val) => acc + val, 0) === -4
+            || this.pawns.slice(2, 6).reduce((acc, val) => acc + val, 0) === -4
+            || this.pawns.slice(3, 7).reduce((acc, val) => acc + val, 0) === -4;
     }
 
     private getColumn(playedColumn: Column): Pawn[] {
@@ -218,6 +225,7 @@ describe('test connect 4', () => {
 
             const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(3));
 
+            expect(grid.printGrid()).toEqual([-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             expect(endgame).toEqual(Endgame.YELLOW_WIN);
         });
         it('should be not win when line 0 state move from L[Y Y Y] to L[Y Y Y +R]', () => {
@@ -228,6 +236,18 @@ describe('test connect 4', () => {
             const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(3));
 
             expect(endgame).toEqual(Endgame.NOT_WIN);
+        });
+        it('should be yellow win when line 0 state move from L[R . Y Y Y] to L[R . Y Y Y +Y]', () => {
+            grid.addPawn(Pawn.RED, new Column(0));
+            grid.addPawn(Pawn.YELLOW, new Column(2));
+            grid.addPawn(Pawn.YELLOW, new Column(3));
+            grid.addPawn(Pawn.YELLOW, new Column(4));
+
+            const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(5));
+
+            expect(grid.printGrid()).toEqual([1, 0, -1, -1, -1, -1, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            expect(endgame).toEqual(Endgame.YELLOW_WIN);
         });
     });
 
