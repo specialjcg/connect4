@@ -10,6 +10,8 @@ export enum Endgame {
     YELLOW_WIN,
 }
 
+const NOT_IN_ARRAY: number = -1;
+
 const COLUMNS: number = 7;
 
 const ROWS: number = 6;
@@ -78,19 +80,15 @@ class Grid {
         const column: Pawn[] = this.getColumn(playedColumn);
 
         return [
-                isFourColumn(column, 0),
-                isFourColumn(column, 1),
-                isFourColumn(column, 2)
+                this.isFourColumn(column, 0),
+                this.isFourColumn(column, 1),
+                this.isFourColumn(column, 2)
             ].find((endgame: Endgame) => endgame !== Endgame.NOT_WIN)
             || Endgame.NOT_WIN;
     };
 
     private isLineWin(playedColumn: Column): Endgame {
-        const column: Pawn[] = this.getColumn(playedColumn);
-        let firstEmptyIndex = column.indexOf(Pawn.EMPTY);
-        if (firstEmptyIndex === -1) firstEmptyIndex = COLUMNS;
-
-        if (this.isFourLine((firstEmptyIndex - 1) * COLUMNS)) {
+        if (this.isFourLine(this.getLineIndex(playedColumn))) {
             return Endgame.YELLOW_WIN;
         }
         return Endgame.NOT_WIN;
