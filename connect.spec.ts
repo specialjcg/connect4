@@ -286,6 +286,9 @@ describe('test connect 4', () => {
     });
 
     // TODO: Test endgame conditions
+    // TODO: IsfourLine for RED
+    // TODO: IsfourLine return Endgame
+    // TODO: IsFourLine uses reduce.
     // TODO: Core / Generic : prints (contrat d'interface ?).
     // TODO: Game loop
 });
