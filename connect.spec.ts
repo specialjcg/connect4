@@ -88,7 +88,8 @@ class Grid {
     }
 
     private isColumnWin(playedColumn: Column): Endgame {
-        const column: Pawn[] = this.getColumn(playedColumn)
+        const column: Pawn[] = this.getColumn(playedColumn);
+
         return [
                 isFourColumn(column, 0),
                 isFourColumn(column, 1),
@@ -98,17 +99,21 @@ class Grid {
     };
 
     private isLineWin(playedColumn: Column): Endgame {
-        if (this.isFourLine()) {
+        const column: Pawn[] = this.getColumn(playedColumn);
+        let firstEmptyIndex = column.indexOf(Pawn.EMPTY);
+        if (firstEmptyIndex === -1) firstEmptyIndex = COLUMNS;
+
+        if (this.isFourLine((firstEmptyIndex - 1) * COLUMNS)) {
             return Endgame.YELLOW_WIN;
         }
         return Endgame.NOT_WIN;
     };
 
-    private isFourLine(): boolean {
-        return this.pawns.slice(0, 4).reduce((acc, val) => acc + val, 0) === -4
-            || this.pawns.slice(1, 5).reduce((acc, val) => acc + val, 0) === -4
-            || this.pawns.slice(2, 6).reduce((acc, val) => acc + val, 0) === -4
-            || this.pawns.slice(3, 7).reduce((acc, val) => acc + val, 0) === -4;
+    private isFourLine(lineIndex: number): boolean {
+        return this.pawns.slice(lineIndex, 4 + lineIndex).reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS
+            || this.pawns.slice(1 + lineIndex, 5 + lineIndex).reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS
+            || this.pawns.slice(2 + lineIndex, 6 + lineIndex).reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS
+            || this.pawns.slice(3 + lineIndex, 7 + lineIndex).reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS;
     }
 
     private getColumn(playedColumn: Column): Pawn[] {
