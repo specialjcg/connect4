@@ -74,8 +74,12 @@ class Grid {
     if (endgameState !== Endgame.NOT_WIN) {
       return endgameState;
     }
+    endgameState = this.isLineWin(column);
+    if (endgameState !== Endgame.NOT_WIN) {
+      return endgameState;
+    }
 
-    return this.isLineWin(column);
+    return this.isDiagonalWin(column);
   }
 
   private isColumnWin(playedColumn: Column): Endgame {
@@ -146,6 +150,24 @@ class Grid {
   }
 
 
+  private isDiagonalWin(playedColumn: Column): Endgame {
+    let result = false;
+
+    const playedLine = this.getLineIndex(playedColumn);
+
+    for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
+      for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
+        result = result || [
+          this.pawns[FIRST_DIAGONAL_PAWN_POSITION + columnOffset + 0 * DIAGONAL_OFFSET + lineOffset * COLUMNS],
+          this.pawns[FIRST_DIAGONAL_PAWN_POSITION + columnOffset + 1 * DIAGONAL_OFFSET + lineOffset * COLUMNS],
+          this.pawns[FIRST_DIAGONAL_PAWN_POSITION + columnOffset + 2 * DIAGONAL_OFFSET + lineOffset * COLUMNS],
+          this.pawns[FIRST_DIAGONAL_PAWN_POSITION + columnOffset + 3 * DIAGONAL_OFFSET + lineOffset * COLUMNS],
+
+        ].toString() === [Pawn.RED, Pawn.RED, Pawn.RED, Pawn.RED].toString()
+      }
+    }
+    return result ? Endgame.RED_WIN : Endgame.NOT_WIN;
+  }
 }
 
 describe('test connect 4', () => {
@@ -317,7 +339,272 @@ describe('test connect 4', () => {
         1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
       expect(endgame).toEqual(Endgame.RED_WIN);
     })
+    it(`should be Red win for diagonal when add a Red pawn in column 0
+          board state from :
+          ...
+          | . . . . . . . |
+          | Y R . . . . . |
+          | Y Y R . . . . |
+          | Y R R R . . . |
+          to
+          ...
+          | R . . . . . . |
+          | Y R . . . . . |
+          | Y Y R . . . . |
+          | Y R R R . . . |`, () => {
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(3));
 
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(1));
+
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+
+      expect(grid.printGrid()).toEqual([
+        -1, 1, 1, 1, 0, 0, 0,
+        -1, -1, 1, 0, 0, 0, 0,
+        -1, 1, 0, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.RED_WIN);
+    })
+    it(`should be Red win for diagonal when add a Red pawn in column 1
+          board state from :
+          ...
+          | . . . . . . . |
+          | . Y R . . . . |
+          | . Y Y R . . . |
+          | . Y R R R . . |
+          to
+          ...
+          | . R . . . . . |
+          | . Y R . . . . |
+          | . Y Y R . . . |
+          | . Y R R R . . |`, () => {
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(4));
+
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.YELLOW, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(3));
+
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(1));
+
+      expect(grid.printGrid()).toEqual([
+        0, -1, 1, 1, 1, 0, 0,
+        0, -1, -1, 1, 0, 0, 0,
+        0, -1, 1, 0, 0, 0, 0,
+        0, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.RED_WIN);
+    })
+    it(`should be Red win for diagonal when add a Red pawn in column 6
+          board state from :
+          ...
+          | . . . R . . . |
+          | . . . Y R . . |
+          | . . . Y Y R . |
+          | . . . Y R R . |
+          to
+          ...
+          | . . . R . . . |
+          | . . . Y R . . |
+          | . . . Y Y R . |
+          | . . . Y R R R |`, () => {
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(5));
+
+
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(5));
+
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(4));
+
+      grid.addPawn(Pawn.RED, new Column(3));
+
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(6));
+
+      expect(grid.printGrid()).toEqual([
+        0, 0, 0, -1, 1, 1, 1,
+        0, 0, 0, -1, -1, 1, 0,
+        0, 0, 0, -1, 1, 0, 0,
+        0, 0, 0, 1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.RED_WIN);
+    })
+    it(`should be Red win for diagonal when add a Red pawn in column 0 with 5 lines
+          board state from :
+          ...
+          | . . . . . . . |
+          | R R . . . . . |
+          | Y Y R . . . . |
+          | Y Y R R . . . |
+          | Y R R Y Y . . |
+          to
+          ...
+          | R . . . . . . |
+          | R R . . . . . |
+          | Y Y R . . . . |
+          | Y Y R R . . . |
+          | Y R R Y Y . . |`, () => {
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(3));
+
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+
+      grid.addPawn(Pawn.RED, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(1));
+
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(0));
+
+      expect(grid.printGrid()).toEqual([
+        -1, 1, 1, -1, -1, 0, 0,
+        -1, -1, 1, 1, 0, 0, 0,
+        -1, -1, 1, 0, 0, 0, 0,
+        1, 1, 0, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.RED_WIN);
+    })
+    it(`should be Red win for diagonal when add a Red pawn in column 3 with 5 lines
+          board state from :
+          ...
+          | . . . R . . . |
+          | . . . R R . . |
+          | . . . R Y R . |
+          | . . . Y Y R . |
+          | . . . Y R R Y |
+          | . . . R R Y Y |
+          to
+          ...
+          | . . . R . . . |
+          | . . . R R . . |
+          | . . . R Y R . |
+          | . . . Y Y R R |
+          | . . . Y R R Y |
+          | . . . R R Y Y |`, () => {
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(5));
+      grid.addPawn(Pawn.YELLOW, new Column(6));
+
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(5));
+      grid.addPawn(Pawn.YELLOW, new Column(6));
+
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(5));
+
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(5));
+
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(4));
+
+      grid.addPawn(Pawn.RED, new Column(3));
+
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(6));
+
+      expect(grid.printGrid()).toEqual([
+        0, 0, 0, 1, 1, -1, -1,
+        0, 0, 0, -1, 1, 1, -1,
+        0, 0, 0, -1, -1, 1, 1,
+        0, 0, 0, 1, -1, 1, 0,
+        0, 0, 0, 1, 1, 0, 0,
+        0, 0, 0, 1, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.RED_WIN);
+    })
+    it(`should be Red win for diagonal when add a Red pawn in column 3 with 5 lines
+          board state from :
+          ...
+          | Y . . . . . .|
+          | R R . . . . .|
+          | R Y R . . . .|
+          | Y Y R R . . .|
+          | Y R R Y . . .|
+          | R R Y R Y Y .|
+          to
+          ...
+          | Y . . . . . .|
+          | R R . . . . .|
+          | R Y R . . . .|
+          | Y Y R R . . .|
+          | Y R R Y R . .|
+          | R R Y R Y Y .|`, () => {
+      grid.addPawn(Pawn.RED, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(1));
+      grid.addPawn(Pawn.YELLOW, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(5));
+
+
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(3));
+
+      grid.addPawn(Pawn.RED, new Column(0));
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(2));
+
+      grid.addPawn(Pawn.RED, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(1));
+
+      grid.addPawn(Pawn.YELLOW, new Column(0));
+
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(4));
+
+      expect(grid.printGrid()).toEqual([
+        1, 1, -1, 1,-1, -1, 0,
+        -1, 1, 1, -1, 1, 0, 0,
+        -1, -1, 1, 1, 0, 0, 0,
+         1, -1, 1, 0, 0, 0, 0,
+        1, 1, 0, 0, 0, 0, 0,
+         -1, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.RED_WIN);
+    })
 
   });
 
