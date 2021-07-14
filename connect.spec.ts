@@ -90,7 +90,10 @@ class Grid {
   }
 
   private isLineWin(playedColumn: Column): Endgame {
-    return this.isFourLine(this.getLineIndex(playedColumn));
+    return this.getPossibilitiesSums(
+      this.getLineIndex(playedColumn)).reduce((acc, val) => this.getEndgameState(acc, val),
+      Endgame.NOT_WIN,
+    );
   }
 
   private getLineIndex(playedColumn: Column) {
@@ -319,9 +322,6 @@ describe('test connect 4', () => {
   });
 
   // TODO: Test endgame conditions
-  // TODO: IsfourLine for RED
-  // TODO: IsfourLine return Endgame
-  // TODO: IsFourLine uses reduce.
   // TODO: Core / Generic : prints (contrat d'interface ?).
   // TODO: Game loop
 });
