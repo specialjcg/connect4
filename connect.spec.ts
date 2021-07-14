@@ -156,7 +156,7 @@ class Grid {
   private isDiagonalWin(playedColumn: Column): Endgame {
     let result = false;
 
-    const playedLine = this.getLineIndex(playedColumn);
+    //const playedLine = this.getLineIndex(playedColumn);
 
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
       for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
@@ -636,8 +636,8 @@ describe('test connect 4', () => {
     })
 
   });
-
   // TODO: Test endgame conditions
+  // TODO: GetDiagonalsCardinalities from position.
   // TODO: Core / Generic : prints (contrat d'interface ?).
   // TODO: Game loop
 });
