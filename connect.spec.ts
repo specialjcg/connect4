@@ -39,7 +39,7 @@ class Column {
 class IllegalColumnIndexError {
 }
 
-const LINE_WIN_4_POSSIBILITIES = [0,0,0,0];
+const LINE_WIN_4_POSSIBILITIES = [0, 0, 0, 0];
 
 class Grid {
   private pawns: Pawn[] = Array.from({length: BOARD_DIMENSION}).map(() => Pawn.EMPTY);
@@ -111,27 +111,19 @@ class Grid {
     return Endgame.NOT_WIN;
   }
 
-  private isFourLine(lineIndex: number): Endgame {
-    const result: Pawn[][] = LINE_WIN_4_POSSIBILITIES.map((_: number, index: number) =>
-      this.pawns.slice(index + lineIndex, index + FOUR_PAWNS_TO_WIN + lineIndex));
+  private getEndgameState(previousState: Endgame, currentState: Endgame): Endgame {
+    if (previousState !== Endgame.NOT_WIN) return previousState;
 
-    // array.reduce((acc,val)=>acc ||this.pawns.slice(val + lineIndex, val+4 + lineIndex).reduce((acc, val) => acc + val, 0) === color ,true)
-
-    const isRedWin: boolean[] = [result[0].reduce((acc, val) => acc + val, 0) === FOUR_RED_PAWNS,
-       result[1].reduce((acc, val) => acc + val, 0) === FOUR_RED_PAWNS,
-       result[2].reduce((acc, val) => acc + val, 0) === FOUR_RED_PAWNS,
-       result[3].reduce((acc, val) => acc + val, 0) === FOUR_RED_PAWNS];
-
-    const isYellowWin: boolean[] = [result[0].reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS,
-       result[1].reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS,
-       result[2].reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS,
-       result[3].reduce((acc, val) => acc + val, 0) === FOUR_YELLOW_PAWNS];
-
-    if (isRedWin.reduce((acc, val) => acc || val)) return Endgame.RED_WIN;
-    if (isYellowWin.reduce((acc, val) => acc || val)) return Endgame.YELLOW_WIN;
-
+    if (currentState === FOUR_RED_PAWNS) return Endgame.RED_WIN;
+    if (currentState === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
     return Endgame.NOT_WIN;
+  }
 
+  private getPossibilitiesSums(lineIndex: number): number[] {
+    return LINE_WIN_4_POSSIBILITIES
+      .map((_: number, index: number) => this.pawns
+        .slice(index + lineIndex, index + FOUR_PAWNS_TO_WIN + lineIndex))
+      .map(val => val.reduce((acc, val) => acc + val, 0));
   }
 
   private getColumn(playedColumn: Column): Pawn[] {
