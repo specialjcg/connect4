@@ -267,7 +267,14 @@ describe('test connect 4', () => {
 
       const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(3));
 
-      expect(grid.printGrid()).toEqual([-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+      expect(grid.printGrid()).toEqual([
+        -1, -1, -1, -1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
     });
     it('should be not win when line 0 state move from L[Y Y Y] to L[Y Y Y +R]', () => {
@@ -287,8 +294,14 @@ describe('test connect 4', () => {
 
       const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(5));
 
-      expect(grid.printGrid()).toEqual([1, 0, -1, -1, -1, -1, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+      expect(grid.printGrid()).toEqual([
+        1, 0, -1, -1, -1, -1, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
     });
 
@@ -311,8 +324,14 @@ describe('test connect 4', () => {
 
       const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(3));
 
-      expect(grid.printGrid()).toEqual([-1, -1, -1, 1, 0, 0, 0,
-        -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+      expect(grid.printGrid()).toEqual([
+        -1, -1, -1, 1, 0, 0, 0,
+        -1, -1, -1, -1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
     });
 
@@ -335,8 +354,14 @@ describe('test connect 4', () => {
 
       const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(3));
 
-      expect(grid.printGrid()).toEqual([1, 1, 1, -1, 0, 0, 0,
-        1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+      expect(grid.printGrid()).toEqual([
+        1, 1, 1, -1, 0, 0, 0,
+        1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
       expect(endgame).toEqual(Endgame.RED_WIN);
     })
     it(`should be Red win for diagonal when add a Red pawn in column 0
