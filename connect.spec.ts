@@ -26,6 +26,9 @@ const FOUR_YELLOW_PAWNS = -4;
 
 const EMPTY_COLUMN = [0, 0, 0, 0, 0, 0];
 
+const DIAGONAL_OFFSET: number = COLUMNS - 1;
+const FIRST_DIAGONAL_PAWN_POSITION: number = 3;
+
 const endLineToWin = (startLine: number) => FOUR_PAWNS_TO_WIN + startLine;
 
 class Column {
@@ -100,7 +103,7 @@ class Grid {
     );
   }
 
-  private getLineIndex(playedColumn: Column) {
+  private getLineIndex(playedColumn: Column): number {
     const column: Pawn[] = this.getColumn(playedColumn);
     let firstEmptyIndex = column.indexOf(Pawn.EMPTY);
     if (firstEmptyIndex === NOT_IN_ARRAY) firstEmptyIndex = COLUMNS;
