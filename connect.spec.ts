@@ -583,8 +583,8 @@ describe('test connect 4', () => {
           | Y . . . . . .|
           | R R . . . . .|
           | R Y R . . . .|
-          | Y Y R R . . .|
-          | Y R R Y . . .|
+          | Y Y R . . . .|
+          | Y R R Y R . .|
           | R R Y R Y Y .|
           to
           ...
@@ -606,11 +606,12 @@ describe('test connect 4', () => {
       grid.addPawn(Pawn.RED, new Column(1));
       grid.addPawn(Pawn.RED, new Column(2));
       grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(4));
 
       grid.addPawn(Pawn.YELLOW, new Column(0));
       grid.addPawn(Pawn.YELLOW, new Column(1));
       grid.addPawn(Pawn.RED, new Column(2));
-      grid.addPawn(Pawn.RED, new Column(3));
+
 
       grid.addPawn(Pawn.RED, new Column(0));
       grid.addPawn(Pawn.YELLOW, new Column(1));
@@ -621,7 +622,7 @@ describe('test connect 4', () => {
 
       grid.addPawn(Pawn.YELLOW, new Column(0));
 
-      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(4));
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(3));
 
       expect(grid.printGrid()).toEqual([
         1, 1, -1, 1,-1, -1, 0,
