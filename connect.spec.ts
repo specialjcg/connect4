@@ -157,9 +157,6 @@ class Grid {
 
 
   private isDiagonalLeftToRightWin(): Endgame {
-
-    //const playedLine = this.getLineIndex(playedColumn);
-
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
       for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
         const result: number = [0, 1, 2, 3].reduce((acc, index) =>
