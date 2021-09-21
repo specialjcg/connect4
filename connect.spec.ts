@@ -175,8 +175,10 @@ class Grid {
 
 
   private isDiagonalRightToLeftWin(): Endgame {
+
     if (this.pawns[3]===1 && this.pawns[11]===1&& this.pawns[19]===1 && this.pawns[27]===1) return Endgame.RED_WIN;
     if (this.pawns[2]===1 && this.pawns[10]===1&& this.pawns[18]===1 && this.pawns[26]===1) return Endgame.RED_WIN;
+    if (this.pawns[1]===1 && this.pawns[9]===1&& this.pawns[17]===1 && this.pawns[25]===1) return Endgame.RED_WIN;
     return Endgame.NOT_WIN;
   }
 }
@@ -743,6 +745,7 @@ describe('test connect 4', () => {
       ]);
       expect(endgame).toEqual(Endgame.RED_WIN);
     })
+
     it(`should be Red win for diagonal when add a Red pawn in column 5
           board state from :
           ...
@@ -775,6 +778,43 @@ describe('test connect 4', () => {
         0, 0, 0, 1, -1, -1, 0,
         0, 0, 0, 0, 1, -1, 0,
         0, 0, 0, 0, 0, 1, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.RED_WIN);
+    })
+    it(`should be Red win for diagonal when add a Red pawn in column 4
+          board state from :
+          ...
+          |  . . . . . . . |
+          |  . . . R Y . . |
+          |  . . R Y Y . . |
+          |  . R R R Y . . |
+          to
+          ...
+          |  . . . . R . .|
+          |  . . . R Y . .|
+          |  . . R Y Y . .|
+          |  . R R R Y . .|`, () => {
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(1));
+
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(2));
+
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(3));
+
+      const endgame: Endgame = grid.addPawn(Pawn.RED, new Column(4));
+
+      expect(grid.printGrid()).toEqual([
+        0, 1, 1, 1, -1, 0, 0,
+        0, 0, 1, -1, -1, 0, 0,
+        0, 0, 0, 1, -1, 0, 0,
+        0, 0, 0, 0, 1, 0, 0,
         0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0
       ]);
