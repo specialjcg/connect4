@@ -167,13 +167,12 @@ class Grid {
           acc + this.pawns[FIRST_DIAGONAL_PAWN_POSITION + columnOffset
           + index * DIAGONAL_OFFSET_LEFT_TO_RIGHT + lineOffset * COLUMNS], 0);
 
-        if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN
-        if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN
+        if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
+        if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
       }
     }
     return Endgame.NOT_WIN;
   }
-
 
   private isDiagonalRightToLeftWin(): Endgame {
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
@@ -182,7 +181,7 @@ class Grid {
           acc + this.pawns[columnOffset + index * DIAGONAL_OFFSET_RIGHT_TO_LEFT + lineOffset * COLUMNS], 0);
 
         if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
-        if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN
+        if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
       }
     }
     return Endgame.NOT_WIN;
