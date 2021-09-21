@@ -891,7 +891,8 @@ describe('test connect 4', () => {
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
     })
   });
-  // TODO: Test endgame conditions
+  // TODO: Reduce cardinality by getting pawn y position to test only the 4 max y positions.
+  // TODO : copy  the isDiagonalLeftToRightWin  and in the function delete for and test the four solution and harcoding the loop
   // TODO: GetDiagonalsCardinalities from position.
   // TODO: Core / Generic : prints (contrat d'interface ?).
   // TODO: Game loop
