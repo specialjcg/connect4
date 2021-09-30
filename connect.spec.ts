@@ -37,6 +37,11 @@ class Column {
       throw new IllegalColumnIndexError();
     }
   }
+
+  public equal(index: number): boolean {
+    return this.index === index
+
+  }
 }
 
 class IllegalColumnIndexError {
@@ -76,6 +81,7 @@ class Grid {
 
   private endGameState(column: Column): Endgame {
     const line = this.getLineIndex(column);
+
     let endgameState: Endgame = this.isColumnWin(column);
     if (endgameState !== Endgame.NOT_WIN) {
       return endgameState;
@@ -88,7 +94,7 @@ class Grid {
     if (endgameState !== Endgame.NOT_WIN) {
       return endgameState;
     }
-    return this.isDiagonalRightToLeftWin();
+    return this.isDiagonalRightToLeftWin(column, line);
   }
 
   private isColumnWin(playedColumn: Column): Endgame {
@@ -161,6 +167,7 @@ class Grid {
 
   private isDiagonalLeftToRightWin(column: Column, line: Line): Endgame {
 
+
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
       for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
         const result: number = [0, 1, 2, 3].reduce((acc, index) =>
@@ -174,7 +181,14 @@ class Grid {
     return Endgame.NOT_WIN;
   }
 
-  private isDiagonalRightToLeftWin(): Endgame {
+
+
+  private isDiagonalRightToLeftWin(column: Column, pawnIndex: Line): Endgame {
+    if (column.equal(0) && pawnIndex === 0) {
+
+      return this.isDiagonalRightToLeftWinNew(pawnIndex)
+
+    }
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
       for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
         const result: number = [0, 1, 2, 3].reduce((acc, index) =>
@@ -184,6 +198,19 @@ class Grid {
         if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
       }
     }
+    return Endgame.NOT_WIN;
+  }
+  private isDiagonalRightToLeftWinNew(pawnIndex: Line): Endgame {
+
+    // for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
+    //   for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
+        const result: number = [0, 8, 16, 24].reduce((acc, index) =>
+          acc + this.pawns[index], 0);
+
+        if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
+        if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
+    //   }
+    // }
     return Endgame.NOT_WIN;
   }
 }
@@ -887,6 +914,49 @@ describe('test connect 4', () => {
         0, -1, -1, -1, 0, 0, 0,
         0, 0, -1, 1, 0, 0, 0,
         0, 0, 0, -1, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.YELLOW_WIN);
+    })
+    it(`should be Red win for diagonal when add a YELLOW pawn in column3 0 in last line
+          board state from :
+          ...
+         | . . . . . . . |
+         | . . . . . . . |
+         | . . . Y . . . |
+         | . . Y Y . . . |
+         | . Y R R . . . |
+         | . R Y Y . . . |
+          to
+          ...
+         | . . . . . . . |
+         | . . . . . . . |
+         | . . . Y . . . |
+         | . . Y Y . . . |
+         | . Y R R . . . |
+         | Y R Y Y . . . |`, () => {
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(1));
+
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(2));
+
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+
+
+      const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(0));
+
+      expect(grid.printGrid()).toEqual([
+        -1, 1, -1, -1, 0, 0, 0,
+        0, -1, 1, 1, 0, 0, 0,
+        0, 0, -1, -1, 0, 0, 0,
+        0, 0, 0, -1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
       ]);
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
     })
