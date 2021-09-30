@@ -44,7 +44,7 @@ class IllegalColumnIndexError {
 
 const LINE_WIN_4_POSSIBILITIES = [0, 0, 0, 0];
 
-type Line=number;
+type Line = number;
 
 class Grid {
   private pawns: Pawn[] = Array.from({length: BOARD_DIMENSION}).map(() => Pawn.EMPTY);
@@ -75,7 +75,7 @@ class Grid {
   }
 
   private endGameState(column: Column): Endgame {
-    const line=this.getLineIndex(column);
+    const line = this.getLineIndex(column);
     let endgameState: Endgame = this.isColumnWin(column);
     if (endgameState !== Endgame.NOT_WIN) {
       return endgameState;
@@ -159,7 +159,7 @@ class Grid {
   }
 
 
-  private isDiagonalLeftToRightWin(column: Column, line :Line): Endgame {
+  private isDiagonalLeftToRightWin(column: Column, line: Line): Endgame {
 
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
       for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
