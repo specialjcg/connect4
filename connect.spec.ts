@@ -38,10 +38,7 @@ class Column {
     }
   }
 
-  public equal(index: number): boolean {
-    return this.index === index
 
-  }
 }
 
 class IllegalColumnIndexError {
@@ -80,7 +77,7 @@ class Grid {
   }
 
   private endGameState(column: Column): Endgame {
-    const line = this.getLineIndex(column);
+    const pawnIndex = this.getPawnIndex(column);
 
     let endgameState: Endgame = this.isColumnWin(column);
     if (endgameState !== Endgame.NOT_WIN) {
@@ -90,11 +87,11 @@ class Grid {
     if (endgameState !== Endgame.NOT_WIN) {
       return endgameState;
     }
-    endgameState = this.isDiagonalLeftToRightWin(column, line);
+    endgameState = this.isDiagonalLeftToRightWin();
     if (endgameState !== Endgame.NOT_WIN) {
       return endgameState;
     }
-    return this.isDiagonalRightToLeftWin(column, line);
+    return this.isDiagonalRightToLeftWin(pawnIndex);
   }
 
   private isColumnWin(playedColumn: Column): Endgame {
@@ -165,7 +162,7 @@ class Grid {
   }
 
 
-  private isDiagonalLeftToRightWin(column: Column, line: Line): Endgame {
+  private isDiagonalLeftToRightWin(): Endgame {
 
 
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
@@ -182,12 +179,16 @@ class Grid {
   }
 
 
+  private isDiagonalRightToLeftWin(pawnIndex: Line): Endgame {
 
-  private isDiagonalRightToLeftWin(column: Column, pawnIndex: Line): Endgame {
-    if (column.equal(0) && pawnIndex === 0) {
+    if (
+      pawnIndex === 0 ||
+      pawnIndex === 1 ||
+      pawnIndex === 8 ||
+      pawnIndex === 32
 
+    ) {
       return this.isDiagonalRightToLeftWinNew(pawnIndex)
-
     }
     for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
       for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
@@ -200,18 +201,29 @@ class Grid {
     }
     return Endgame.NOT_WIN;
   }
-  private isDiagonalRightToLeftWinNew(pawnIndex: Line): Endgame {
 
+  private isDiagonalRightToLeftWinNew(pawnIndex: number): Endgame {
     // for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
     //   for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
-        const result: number = [0, 8, 16, 24].reduce((acc, index) =>
-          acc + this.pawns[index], 0);
+    //TODO faire passer le test avec les 2 tableaux en dur et reduce derrière puis la suite
+    //TODO [pawnIndex+0, pawnIndex+8 pawnIndex+16, pawnIndex+24]
+    //TODO [pawnIndex-8, pawnIndex+0, pawnIndex+8, pawnIndex+16]
+    //TODO [pawnIndex-16, pawnIndex-8, pawnIndex+0, pawnIndex+8]
+    //TODO [pawnIndex-24, pawnIndex-16, pawnIndex-8, pawnIndex-0]
+    //TODO faire un tableau des 4 tableaux précédents en faisant un filter sur les indices entre min et max
+    //TODO alternative ajout du tableau conditionel avec test des extremun entre 0 et 42
+    const result: number = [pawnIndex, pawnIndex+8, pawnIndex+16, pawnIndex+24].reduce((acc, index) =>
+      acc + this.pawns[index], 0);
 
-        if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
-        if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
+    if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
+    if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
     //   }
     // }
     return Endgame.NOT_WIN;
+  }
+
+  private getPawnIndex(column: Column): number {
+    return this.getLineIndex(column)+column.index;
   }
 }
 
@@ -956,6 +968,100 @@ describe('test connect 4', () => {
         0, 0, -1, -1, 0, 0, 0,
         0, 0, 0, -1, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.YELLOW_WIN);
+    })
+    it(`should be Red win for diagonal when add a YELLOW pawn in column 1 in last line
+          board state from :
+          ...
+         | . . . . . . . |
+         | . . . . . . . |
+         | . . . . Y . . |
+         | . . . Y Y . . |
+         | . . Y R R . . |
+         | . . R Y Y . . |
+          to
+          ...
+         | . . . . . . . |
+         | . . . . . . . |
+         | . . . . Y . . |
+         | . . . Y Y . . |
+         | . . Y R R . . |
+         | . Y R Y Y . . |`, () => {
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(2));
+
+      grid.addPawn(Pawn.RED, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(2));
+
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+
+
+      const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(1));
+
+      expect(grid.printGrid()).toEqual([
+        0, -1, 1, -1, -1, 0, 0,
+        0, 0, -1, 1, 1, 0, 0,
+        0, 0, 0, -1, -1, 0, 0,
+        0, 0, 0, 0, -1, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0
+      ]);
+      expect(endgame).toEqual(Endgame.YELLOW_WIN);
+    })
+    it(`should be Red win for diagonal when add a YELLOW pawn in column 4 in 4th line
+          board state from :
+          ...
+         | . . . . . . . |
+         | . . . . . . . |
+         | . . . Y R . . |
+         | . . Y Y Y . . |
+         | . Y R R R . . |
+         | R R R Y Y . . |
+          to
+          ...
+         | . . . . . . . |
+         | . . . . Y . . |
+         | . . . Y R . . |
+         | . . Y Y Y . . |
+         | . Y R R R . . |
+         | R R R Y Y . . |`, () => {
+
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.RED, new Column(1));
+      grid.addPawn(Pawn.RED, new Column(0));
+
+      grid.addPawn(Pawn.RED, new Column(4));
+      grid.addPawn(Pawn.RED, new Column(3));
+      grid.addPawn(Pawn.RED, new Column(2));
+      grid.addPawn(Pawn.YELLOW, new Column(1));
+
+      grid.addPawn(Pawn.YELLOW, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+      grid.addPawn(Pawn.YELLOW, new Column(2));
+
+      grid.addPawn(Pawn.RED, new Column(4));
+      grid.addPawn(Pawn.YELLOW, new Column(3));
+
+
+
+
+      const endgame: Endgame = grid.addPawn(Pawn.YELLOW, new Column(4));
+
+      expect(grid.printGrid()).toEqual([
+        1, 1, 1, -1, -1, 0, 0,
+        0, -1, 1, 1, 1, 0, 0,
+        0, 0, -1, -1, -1, 0, 0,
+        0, 0, 0, -1, 1, 0, 0,
+        0, 0, 0, 0, -1, 0, 0,
         0, 0, 0, 0, 0, 0, 0
       ]);
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
