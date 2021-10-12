@@ -841,7 +841,7 @@ describe('test connect 4', () => {
       ]);
       expect(endgame).toEqual(Endgame.RED_WIN);
     })
-    it(`should be Red win for diagonal when add a Red pawn in column 6 in last line
+    fit(`should be Red win for diagonal when add a Red pawn in column 6 in last line
           board state from :
           ...
          | . . . . . . . |
