@@ -48,6 +48,7 @@ const LINE_WIN_4_POSSIBILITIES = [0, 0, 0, 0];
 
 type Line = number;
 
+
 class Grid {
   private pawns: Pawn[] = Array.from({length: BOARD_DIMENSION}).map(() => Pawn.EMPTY);
 
@@ -181,30 +182,28 @@ class Grid {
 
   private isDiagonalRightToLeftWin(pawnIndex: Line): Endgame {
 
-    if (
-      pawnIndex === 0 ||
-      pawnIndex === 1 ||
-      pawnIndex === 8 ||
-      pawnIndex === 32
-
-    ) {
+    // if (
+    //   pawnIndex === 0 ||
+    //   pawnIndex === 1 ||
+    //   pawnIndex === 8 ||
+    //   pawnIndex === 32
+    //
+    // ) {
       return this.isDiagonalRightToLeftWinNew(pawnIndex)
-    }
-    for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
-      for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
-        const result: number = [0, 1, 2, 3].reduce((acc, index) =>
-          acc + this.pawns[columnOffset + index * DIAGONAL_OFFSET_RIGHT_TO_LEFT + lineOffset * COLUMNS], 0);
-
-        if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
-        if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
-      }
-    }
-    return Endgame.NOT_WIN;
+    // }
+    // for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
+    //   for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
+    //     const result: number = [0, 1, 2, 3].reduce((acc, index) =>
+    //       acc + this.pawns[columnOffset + index * DIAGONAL_OFFSET_RIGHT_TO_LEFT + lineOffset * COLUMNS], 0);
+    //
+    //     if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
+    //     if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
+    //   }
+    // }
+    // return Endgame.NOT_WIN;
   }
 
   private isDiagonalRightToLeftWinNew(pawnIndex: number): Endgame {
-    // for (let lineOffset = 0; lineOffset < 3; lineOffset++) {
-    //   for (let columnOffset = 0; columnOffset < 4; columnOffset++) {
     //TODO faire passer le test avec les 2 tableaux en dur et reduce derrière puis la suite
     //TODO [pawnIndex+0, pawnIndex+8 pawnIndex+16, pawnIndex+24]
     //TODO [pawnIndex-8, pawnIndex+0, pawnIndex+8, pawnIndex+16]
@@ -212,17 +211,32 @@ class Grid {
     //TODO [pawnIndex-24, pawnIndex-16, pawnIndex-8, pawnIndex-0]
     //TODO faire un tableau des 4 tableaux précédents en faisant un filter sur les indices entre min et max
     //TODO alternative ajout du tableau conditionel avec test des extremun entre 0 et 42
-    const result: number = [pawnIndex, pawnIndex+8, pawnIndex+16, pawnIndex+24].reduce((acc, index) =>
-      acc + this.pawns[index], 0);
 
-    if (result === FOUR_RED_PAWNS) return Endgame.RED_WIN;
-    if (result === FOUR_YELLOW_PAWNS) return Endgame.YELLOW_WIN;
-    //   }
-    // }
+    const endgames = this.getEndgameTestCases(pawnIndex)
+      .map(array => array.reduce((acc, index) => acc + this.pawns[index], 0));
+
+    if (endgames.includes(FOUR_RED_PAWNS)) return Endgame.RED_WIN;
+    if (endgames.includes(FOUR_YELLOW_PAWNS)) return Endgame.YELLOW_WIN;
+
     return Endgame.NOT_WIN;
   }
 
+  private getEndgameTestCases(pawnIndex: number) {
+    console.log(pawnIndex);
+    return [
+      [pawnIndex, pawnIndex+8, pawnIndex+16, pawnIndex+24],
+      [pawnIndex-8, pawnIndex+0, pawnIndex+8, pawnIndex+16],
+      [pawnIndex-16, pawnIndex-8, pawnIndex+0, pawnIndex+8],
+      [pawnIndex-24, pawnIndex-16, pawnIndex-8, pawnIndex+0]
+    ].filter(this.allIndexesInBoard);
+  }
+
+  private allIndexesInBoard(pawnIndexes: number[]): boolean {
+    return Math.min(...pawnIndexes) >= 0 && Math.max(...pawnIndexes) < BOARD_DIMENSION;
+  }
+
   private getPawnIndex(column: Column): number {
+    
     return this.getLineIndex(column)+column.index;
   }
 }
@@ -1067,6 +1081,7 @@ describe('test connect 4', () => {
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
     })
   });
+  //TODO :review getpawnindex refacto should return index between 0 and 41 include
   // TODO: Reduce cardinality by getting pawn y position to test only the 4 max y positions.
   // TODO : copy  the isDiagonalLeftToRightWin  and in the function delete for and test the four solution and harcoding the loop
   // TODO: GetDiagonalsCardinalities from position.
