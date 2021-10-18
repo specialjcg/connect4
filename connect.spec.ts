@@ -242,7 +242,11 @@ class Grid {
 
   getNewPawnIndex(column: Column):number {
     const filteredColumn = this.pawns.filter(this.isNotEmptyInColumn(column))
-    return (filteredColumn.length - 1) * COLUMNS + column.index;
+    return this.computeIndex(filteredColumn.length-1, column.index);
+  }
+
+  private computeIndex(line: number, column: number) {
+    return line * COLUMNS + column;
   }
 
   private isNotEmptyInColumn(column: Column): (pawn: Pawn, index: number) => boolean {
