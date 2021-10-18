@@ -78,7 +78,7 @@ class Grid {
   }
 
   private endGameState(column: Column): Endgame {
-    const pawnIndex = this.getPawnIndex(column);
+    const pawnIndex = this.getNewPawnIndex(column);
 
     let endgameState: Endgame = this.isColumnWin(column);
     if (endgameState !== Endgame.NOT_WIN) {
@@ -204,13 +204,8 @@ class Grid {
   }
 
   private isDiagonalRightToLeftWinNew(pawnIndex: number): Endgame {
-    //TODO faire passer le test avec les 2 tableaux en dur et reduce derrière puis la suite
-    //TODO [pawnIndex+0, pawnIndex+8 pawnIndex+16, pawnIndex+24]
-    //TODO [pawnIndex-8, pawnIndex+0, pawnIndex+8, pawnIndex+16]
-    //TODO [pawnIndex-16, pawnIndex-8, pawnIndex+0, pawnIndex+8]
-    //TODO [pawnIndex-24, pawnIndex-16, pawnIndex-8, pawnIndex-0]
-    //TODO faire un tableau des 4 tableaux précédents en faisant un filter sur les indices entre min et max
-    //TODO alternative ajout du tableau conditionel avec test des extremun entre 0 et 42
+
+
 
     const endgames = this.getEndgameTestCases(pawnIndex)
       .map(array => array.reduce((acc, index) => acc + this.pawns[index], 0));
@@ -1123,7 +1118,6 @@ describe('test connect 4', () => {
     });
   });
 
-  //TODO :review getpawnindex refacto should return index between 0 and 41 include
   // TODO: Reduce cardinality by getting pawn y position to test only the 4 max y positions.
   // TODO : copy  the isDiagonalLeftToRightWin  and in the function delete for and test the four solution and harcoding the loop
   // TODO: GetDiagonalsCardinalities from position.
