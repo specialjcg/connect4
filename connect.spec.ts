@@ -241,10 +241,16 @@ class Grid {
   }
 
   getNewPawnIndex(column: Column):number {
-    const testColumn = this.pawns.filter((_: Pawn, index: number) => index % column.index === 0)
-    
-    if () return 7
-    return column.index;
+    //const testColumn = this.pawns.filter((pawn: Pawn, index: number) => index % (column.index+7) === 0)
+    const testColumn = this.pawns.filter((pawn: Pawn, index: number) => (index-column.index) % 7 === 0 && pawn !== Pawn.EMPTY)
+
+    console.log(testColumn);
+
+
+    if (this.pawns[column.index]!==Pawn.EMPTY && this.pawns[column.index+7]===Pawn.EMPTY ) {
+      return testColumn.length CO* column.index;
+    }
+    if (this.pawns[0]!==Pawn.EMPTY && this.pawns[7]!==Pawn.EMPTY )  return 7
   }
 }
 
@@ -1100,7 +1106,7 @@ describe('test connect 4', () => {
       expect(grid.getNewPawnIndex(new Column(6))).toEqual(6);
     });
     it(`should return index 0for add pawn on line 1  column 0
-    
+
       | ; . . . . . . |
       | ; . . . . . . |
       | ; . . . Y . . |
