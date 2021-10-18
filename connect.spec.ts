@@ -241,16 +241,12 @@ class Grid {
   }
 
   getNewPawnIndex(column: Column):number {
-    //const testColumn = this.pawns.filter((pawn: Pawn, index: number) => index % (column.index+7) === 0)
-    const testColumn = this.pawns.filter((pawn: Pawn, index: number) => (index-column.index) % 7 === 0 && pawn !== Pawn.EMPTY)
+    const filteredColumn = this.pawns.filter(this.isNotEmptyInColumn(column))
+    return (filteredColumn.length - 1) * COLUMNS + column.index;
+  }
 
-    console.log(testColumn);
-
-
-    if (this.pawns[column.index]!==Pawn.EMPTY && this.pawns[column.index+7]===Pawn.EMPTY ) {
-      return testColumn.length * column.index;
-    }
-    if (this.pawns[0]!==Pawn.EMPTY && this.pawns[7]!==Pawn.EMPTY )  return 7
+  private isNotEmptyInColumn(column: Column): (pawn: Pawn, index: number) => boolean {
+    return (pawn: Pawn, index: number) => (index - column.index) % COLUMNS === 0 && pawn !== Pawn.EMPTY;
   }
 }
 
@@ -1106,17 +1102,20 @@ describe('test connect 4', () => {
       expect(grid.getNewPawnIndex(new Column(6))).toEqual(6);
     });
     it(`should return index 0for add pawn on line 1  column 0
-
-      | ; . . . . . . |
-      | ; . . . . . . |
-      | ; . . . Y . . |
-      | ; . . Y Y . . |
-      | ; . Y R R . . |
-      | ; . R Y Y . . |
     `, () => {
       grid.addPawn(Pawn.RED, new Column(0));
       grid.addPawn(Pawn.RED, new Column(0));
       expect(grid.getNewPawnIndex(new Column(0))).toEqual(7);
+    });
+    it(`should return index 42 for add pawn on line 6  column 6
+    `, () => {
+      grid.addPawn(Pawn.RED, new Column(6));
+      grid.addPawn(Pawn.RED, new Column(6));
+      grid.addPawn(Pawn.RED, new Column(6));
+      grid.addPawn(Pawn.RED, new Column(6));
+      grid.addPawn(Pawn.RED, new Column(6));
+      grid.addPawn(Pawn.RED, new Column(6));
+      expect(grid.getNewPawnIndex(new Column(6))).toEqual(41);
     });
   });
 
