@@ -248,7 +248,7 @@ class Grid {
 
 
     if (this.pawns[column.index]!==Pawn.EMPTY && this.pawns[column.index+7]===Pawn.EMPTY ) {
-      return testColumn.length CO* column.index;
+      return testColumn.length * column.index;
     }
     if (this.pawns[0]!==Pawn.EMPTY && this.pawns[7]!==Pawn.EMPTY )  return 7
   }
