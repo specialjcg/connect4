@@ -236,8 +236,15 @@ class Grid {
   }
 
   private getPawnIndex(column: Column): number {
-    
+
     return this.getLineIndex(column)+column.index;
+  }
+
+  getNewPawnIndex(column: Column):number {
+    const testColumn = this.pawns.filter((_: Pawn, index: number) => index % column.index === 0)
+    
+    if () return 7
+    return column.index;
   }
 }
 
@@ -841,7 +848,7 @@ describe('test connect 4', () => {
       ]);
       expect(endgame).toEqual(Endgame.RED_WIN);
     })
-    fit(`should be Red win for diagonal when add a Red pawn in column 6 in last line
+    it(`should be Red win for diagonal when add a Red pawn in column 6 in last line
           board state from :
           ...
          | . . . . . . . |
@@ -1079,7 +1086,8 @@ describe('test connect 4', () => {
         0, 0, 0, 0, 0, 0, 0
       ]);
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
-    })
+    });
+
   });
 
   describe('getPawnIndex', () => {
