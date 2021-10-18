@@ -1081,6 +1081,31 @@ describe('test connect 4', () => {
       expect(endgame).toEqual(Endgame.YELLOW_WIN);
     })
   });
+
+  describe('getPawnIndex', () => {
+    it('should return index 0 for add pawn on line 0  column 0 ', () => {
+      grid.addPawn(Pawn.RED, new Column(0));
+      expect(grid.getNewPawnIndex(new Column(0))).toEqual(0);
+    });
+    it('should return index 6 for add pawn on line 0  column 6 ', () => {
+      grid.addPawn(Pawn.RED, new Column(6));
+      expect(grid.getNewPawnIndex(new Column(6))).toEqual(6);
+    });
+    it(`should return index 0for add pawn on line 1  column 0
+    
+      | ; . . . . . . |
+      | ; . . . . . . |
+      | ; . . . Y . . |
+      | ; . . Y Y . . |
+      | ; . Y R R . . |
+      | ; . R Y Y . . |
+    `, () => {
+      grid.addPawn(Pawn.RED, new Column(0));
+      grid.addPawn(Pawn.RED, new Column(0));
+      expect(grid.getNewPawnIndex(new Column(0))).toEqual(7);
+    });
+  });
+
   //TODO :review getpawnindex refacto should return index between 0 and 41 include
   // TODO: Reduce cardinality by getting pawn y position to test only the 4 max y positions.
   // TODO : copy  the isDiagonalLeftToRightWin  and in the function delete for and test the four solution and harcoding the loop
